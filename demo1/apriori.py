@@ -39,4 +39,4 @@ if __name__ == '__main__':
 	D = map(set, dataSet)
 	L1, suppData0 = scanD(D, C1, 0.5)
 	print L1
-	
+	print "hehe"
