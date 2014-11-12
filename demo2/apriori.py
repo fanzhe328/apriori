@@ -1,7 +1,17 @@
 #coding:utf-8
+import time
 
 def loadDataSet():
-	return [[1, 3, 4], [2 ,3, 5], [1, 2, 3, 5], [2, 5]]
+	dataSet = []
+	f = open('chess.dat', 'r')
+	i = 0
+	for line in f.readlines():
+		i += 1
+		dataSet.append(line.split(' ')[:6])
+		if i == 10:
+			break
+	f.close()
+	return dataSet
 
 def createC1(dataSet):
 	C1 = []
@@ -89,14 +99,38 @@ def rulesFromConseq(freqSet, H, supportData, brl, minConf = 0.7):
 		if( len(Hmp1) > 1):
 			rulesFromConseq(freqSet, Hmp1, supportData, brl, minConf)
 
+def write_result_supp(L, supp):
+	f = open('result_fre.txt', 'w')
+	for line in L:
+		for item in line:
+			f.write(' '.join(set(item)) + '\n')
+	f.close()
+	
+	f = open('result_supp.txt', 'w')
+	for key, value in supp.iteritems():
+		f.write('_'.join(set(key)) + ':' + str(value) + '\n')
+	f.close()
 
 if __name__ == '__main__':
+	start_time = time.time()
 	dataSet = loadDataSet()
+	print 'data length', len(dataSet)
+	print 'first data', dataSet[0]
+	print 'Finding frequent itemset...'
+	L, supportData = apriori(dataSet, 0.9)
+	print 'Time elapse: ', time.time() - start_time
+	# print supportData
+	# for key, value in supportData.iteritems():
+	# 	print set(key), value
+	write_result_supp(L, supportData)
+	# print len(L)
+	# print L[0]
+	# print supportData[0]
 
-	L, supportData = apriori(dataSet, 0.5)
-	print L
-	rules = generateRules(L, supportData, minConf = 0.7)
-	print rules
+
+	# print L
+	# rules = generateRules(L, supportData, minConf = 0.7)
+	# print rules
 
 	# print supportData
 	# L2 = aprioriGen(L[0], 2)
